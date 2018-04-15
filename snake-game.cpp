@@ -198,8 +198,9 @@ int main(){
         draw();
         input();
         logic();
-
         //sleep(10);
     }
+    cout << "Development: Mateus Junges" << endl;
+    cout << "Engenharia de computação - UEPG" << endl;
     return 0;
 }
