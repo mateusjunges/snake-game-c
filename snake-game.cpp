@@ -6,7 +6,7 @@ using namespace std;
 
 bool gameOver;
 const int width  = 70;
-const int heigth = 20;
+const int height = 20;
 
 //Position
 int x;
@@ -41,11 +41,11 @@ void setup(){
 
     //set position to the center of the map
     x = width / 2;
-    y = heigth / 2;
+    y = height / 2;
 
     //set a random fruit position
     fruitX = rand() % width;
-    fruitY = rand() % heigth;
+    fruitY = rand() % height;
 
     //initial score is equal to 0
     score = 0;
@@ -58,7 +58,7 @@ void draw(){
     cout << endl;
 
     //Print the map:
-    for( int i = 0; i < heigth; i++ ){
+    for( int i = 0; i < height; i++ ){
         for( int j = 0; j < width; j++ ){
             if( j == 0 )
                 cout << "#";
@@ -128,17 +128,18 @@ void logic(){
     int prev2X;
     int prev2Y;
 
+    //the first follow the head
     tailX[0] = x;
     tailY[0] = y;
 
     //tail follows the head
     for( int i = 1; i < nTail; i++ ){
-        prev2X = tailX[i];
-        prev2Y = tailY[i];
+        prev2X   = tailX[i];
+        prev2Y   = tailY[i];
         tailX[i] = prevX;
         tailY[i] = prevY;
-        prevX = prev2X;
-        prevY = prev2Y;
+        prevX    = prev2X;
+        prevY    = prev2Y;
     }
     switch(dir){ // switch direction:
         case LEFT:
@@ -156,14 +157,34 @@ void logic(){
         default:
             break;
     }
-    if( x > width || x < 0 ||y > heigth || y < 0)//if i hit the wall
-        gameOver = true; //game end
+
+    /*
+        With this code, the game ends when you hit the walls:
+
+        if( x > width || x < 0 ||y > heigth || y < 0)//if i hit the wall
+            gameOver = true; //game end
+    */
+
+    /* With this code, the snake can cross the walls */
+    if ( x >= width )
+        x = 0;
+    else if ( x < 0 )
+        x = width - 1;
+    if ( y >= height )
+        y = 0;
+    else if ( y < 0 )
+        y = height - 1;
+    /* cross the wall ends here */
+
+    for ( int i = 0; i < nTail; i++ )
+        if ( tailX[i] == x && tailY[i] == y )
+            gameOver = true;
     if( x ==  fruitX && y == fruitY ){ // if i eat the fruit
         score += 10; //increase the score
 
         //set a random fruit position
         fruitX = rand() % width;
-        fruitY = rand() % heigth;
+        fruitY = rand() % height;
 
         //increase the tail by 1
         nTail++;
